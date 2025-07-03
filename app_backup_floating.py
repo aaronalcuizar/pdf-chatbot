@@ -19,6 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Clean CSS styling
 # Updated CSS with fixed floating input
 st.markdown("""
 <style>

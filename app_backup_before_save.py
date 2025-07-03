@@ -19,20 +19,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Updated CSS with fixed floating input
+# Clean CSS styling
 st.markdown("""
 <style>
-    /* Remove default padding and margins */
+    /* Clean layout */
     .main .block-container {
         padding-top: 1rem;
-        padding-bottom: 120px; /* Space for fixed input */
         max-width: 1200px;
     }
-    
-    /* Hide streamlit elements */
-    .stApp > header {display: none;}
-    .stApp > footer {display: none;}
-    #MainMenu {display: none;}
     
     /* Chat messages */
     .chat-message {
@@ -65,88 +59,35 @@ st.markdown("""
         text-align: center;
     }
     
-    /* FIXED/FLOATING INPUT AREA */
-    .floating-input {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid #e2e8f0;
-        padding: 1rem;
-        z-index: 1000;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-    }
-    
-    /* Quick questions floating */
-    .floating-questions {
-        position: fixed;
-        bottom: 80px;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid #e2e8f0;
-        padding: 0.5rem 1rem;
-        z-index: 999;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    }
-    
-    /* Input styling */
-    .stTextInput input {
-        border-radius: 25px;
-        border: 2px solid #e2e8f0;
-        padding: 12px 20px;
-        font-size: 14px;
-        transition: all 0.3s ease;
+    /* Input area */
+    .input-section {
         background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 15px;
+        padding: 1rem;
+        margin-top: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     
-    .stTextInput input:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
-    
-    /* Send button styling */
+    /* Buttons */
     .stButton > button {
-        border-radius: 25px;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        border: none;
-        color: white;
-        font-weight: 600;
-        padding: 12px 24px;
-        transition: all 0.3s ease;
-        min-height: 48px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #374151;
+        transition: all 0.2s;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-    }
-    
-    /* Quick question buttons */
-    .quick-btn {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 20px;
-        padding: 8px 16px;
-        margin: 0 5px;
-        font-size: 13px;
-        color: #374151;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-    
-    .quick-btn:hover {
-        background: #f8fafc;
+        background: #f3f4f6;
         border-color: #4f46e5;
-        color: #4f46e5;
     }
     
-    /* Remove unwanted margins from containers */
-    .element-container {
-        margin-bottom: 0 !important;
+    /* Primary button */
+    .primary-btn {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: white !important;
+        border: none !important;
     }
     
     /* Save section styling */
@@ -156,20 +97,6 @@ st.markdown("""
         border-radius: 10px;
         border: 1px solid #e9ecef;
         margin: 1rem 0;
-    }
-    
-    /* Welcome message improvements */
-    .welcome-container {
-        min-height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Chat container */
-    .chat-container {
-        min-height: 60vh;
-        padding-bottom: 140px; /* Extra space for floating input */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -593,99 +520,60 @@ def show_conversation_controls():
             st.metric("Messages", total_messages)
 
 def main():
-    """Main app with fixed floating input"""
+    """Main app with enhanced save functionality"""
     initialize_session()
     sidebar()
     
-    # Compact header (no extra space)
+    # Header
     st.markdown("""
-    <div style='text-align: center; margin-bottom: 1rem; padding-top: 0;'>
-        <h1 style='background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-size: 2.5rem;'>
+    <div style='text-align: center; margin-bottom: 2rem;'>
+        <h1 style='background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;'>
             🤖 Smart PDF Chatbot
         </h1>
-        <p style='color: #64748b; margin: 0.2rem 0; font-size: 1rem;'>Have intelligent conversations with your documents</p>
+        <p style='color: #64748b; margin: 0.5rem 0;'>Have intelligent conversations with your documents</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Document status (compact)
+    # Document status
     if st.session_state.document_ready and st.session_state.doc_info:
         doc = st.session_state.doc_info
         st.markdown(f"""
-        <div class="doc-status" style="margin-bottom: 1rem; padding: 0.8rem;">
-            📄 <strong>{doc['filename']}</strong> Ready! • 📊 {doc['word_count']:,} words • {doc['chunk_count']} chunks
+        <div class="doc-status">
+            📄 <strong>{doc['filename']}</strong> Ready!<br>
+            📊 {doc['word_count']:,} words • {doc['chunk_count']} chunks
         </div>
         """, unsafe_allow_html=True)
     
-    # Chat area (with proper container)
-    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+    # Chat area
     show_chat()
-    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Conversation controls (above floating input)
+    # Conversation controls
     show_conversation_controls()
     
-    # FLOATING QUICK QUESTIONS
-    st.markdown('<div class="floating-questions">', unsafe_allow_html=True)
-    floating_quick_questions()
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Input section
+    st.markdown('<div class="input-section">', unsafe_allow_html=True)
     
-    # FLOATING INPUT AREA
-    st.markdown('<div class="floating-input">', unsafe_allow_html=True)
-    floating_input_area()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def floating_quick_questions():
-    """Floating quick questions bar"""
-    if not st.session_state.document_ready:
-        questions = ["How does this work?", "What can you analyze?", "Upload a document"]
-    else:
-        doc = st.session_state.doc_info
-        if doc and 'annual' in doc['filename'].lower():
-            questions = ["Key metrics?", "Financial highlights?", "Business strategy?"]
-        elif doc and 'research' in doc['filename'].lower():
-            questions = ["Research objective?", "Methodology?", "Key findings?"]
-        else:
-            questions = ["Summarize document", "Main topics?", "Key insights?"]
+    # Quick questions
+    quick_q = quick_questions()
     
-    st.markdown("**💡 Quick questions:**")
-    cols = st.columns(len(questions))
-    
-    for i, q in enumerate(questions):
-        with cols[i]:
-            if st.button(q, key=f"floating_quick_{i}", use_container_width=True):
-                # Store the question and trigger processing
-                st.session_state.pending_question = q
-                st.rerun()
-
-def floating_input_area():
-    """Fixed floating input area"""
-    # Check for pending question from quick buttons
-    pending_q = st.session_state.get('pending_question', '')
-    if pending_q:
-        # Clear the pending question
-        del st.session_state.pending_question
-        # Process it
-        handle_question(pending_q)
-        st.rerun()
-    
-    # Input row
-    col1, col2 = st.columns([5, 1])
-    
+    # Input
+    col1, col2 = st.columns([4, 1])
     with col1:
         user_input = st.text_input(
-            "Message",
-            placeholder="Ask anything about your document...",
-            key="floating_input",
+            "Ask anything about your document...",
+            placeholder="What would you like to know?",
+            key="user_input",
             label_visibility="collapsed"
         )
-    
     with col2:
-        send = st.button("Send", use_container_width=True, key="floating_send")
+        send = st.button("Send", use_container_width=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Handle input
-    if send and user_input:
-        handle_question(user_input)
-        # Clear the input by rerunning
+    if (send and user_input) or quick_q:
+        question = quick_q if quick_q else user_input
+        handle_question(question)
         st.rerun()
 
 if __name__ == "__main__":
