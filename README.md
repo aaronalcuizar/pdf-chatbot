@@ -2,7 +2,7 @@
 
 A sophisticated Streamlit application that enables users to upload PDF documents and engage in intelligent conversations about their content using ChatGPT integration.
 
-## 🎯 Features
+## Features
 
 ### Core Functionality
 - **PDF Upload & Processing**: Seamless PDF document upload with intelligent text extraction
@@ -16,7 +16,7 @@ A sophisticated Streamlit application that enables users to upload PDF documents
 - **Multi-Document Support**: Handle various document types (research papers, business reports, etc.)
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -61,7 +61,7 @@ streamlit run app.py
 6. **Open browser**
 Navigate to `http://localhost:8501`
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### 1. Upload Document
 - Use the sidebar to upload any PDF document
@@ -84,7 +84,7 @@ Navigate to `http://localhost:8501`
 - "What are the main recommendations?"
 - "Extract key financial metrics"
 
-## 🏗️ Architecture
+## Architecture
 
 ### System Design
 ```
@@ -115,7 +115,7 @@ Streamlit UI ← Response Formatting ← Context Retrieval ← Vector Search
 - Session state management for conversation history
 - Error handling and user feedback
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 Create a `.env` file with:
@@ -128,7 +128,7 @@ OPENAI_API_KEY=your-openai-api-key-here
 - **Advanced Model**: GPT-4 (higher quality, higher cost)
 - **Demo Mode**: Text-based responses (no API required)
 
-## 🧪 Testing
+## Testing
 
 ### Manual Testing
 1. Upload various document types (research papers, reports, manuals)
@@ -142,7 +142,7 @@ OPENAI_API_KEY=your-openai-api-key-here
 - ✅ Technical manuals and documentation
 - ✅ Legal contracts and agreements
 
-## 📊 Performance Considerations
+## Performance Considerations
 
 ### Optimization Strategies
 - **Chunk Size Optimization**: Configurable chunk sizes for different document types
@@ -155,7 +155,7 @@ OPENAI_API_KEY=your-openai-api-key-here
 - **Session Management**: Clean session state handling
 - **Resource Usage**: Optimized for typical Streamlit deployment
 
-## 🔐 Security & Privacy
+## Security & Privacy
 
 ### Data Handling
 - **Local Processing**: PDF processing happens locally
@@ -163,7 +163,7 @@ OPENAI_API_KEY=your-openai-api-key-here
 - **No Data Persistence**: Documents not stored permanently
 - **Session Isolation**: Each user session is independent
 
-## 🚀 Deployment
+## Deployment
 
 ### Local Development
 ```bash
@@ -180,7 +180,7 @@ streamlit run app.py
 2. Configure secrets management for API keys
 3. Set up monitoring and logging
 
-## 🔄 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - [ ] Multi-language document support
@@ -195,7 +195,7 @@ streamlit run app.py
 - [ ] Response caching
 - [ ] Batch processing capabilities
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Setup
 1. Fork the repository
@@ -210,18 +210,18 @@ streamlit run app.py
 - **Testing**: Include tests for new features
 - **Commits**: Clear, descriptive commit messages
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **OpenAI**: For ChatGPT API and embedding models
 - **Streamlit**: For the excellent web framework
 - **PyMuPDF**: For reliable PDF text extraction
 - **FAISS**: For efficient vector similarity search
 
-## 📞 Support
+## Support
 
 For issues, questions, or contributions:
 - Create an issue on GitHub
