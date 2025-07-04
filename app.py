@@ -19,13 +19,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Updated CSS with fixed floating input
+# Updated CSS - FIXED: Reduced top and bottom margins to 24px
 st.markdown("""
 <style>
-    /* Remove default padding and margins */
+    /* Remove default padding and margins - UPDATED: Reduced to 24px */
     .main .block-container {
-        padding-top: 1rem;
-        padding-bottom: 120px; /* Space for fixed input */
+        padding-top: 24px;
+        padding-bottom: 24px;
         max-width: 1200px;
     }
     
@@ -65,83 +65,43 @@ st.markdown("""
         text-align: center;
     }
     
-    /* FIXED/FLOATING INPUT AREA */
-    .floating-input {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid #e2e8f0;
-        padding: 1rem;
-        z-index: 1000;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    /* FIXED: Input styling with visible text */
+    .stTextInput > div > div > input {
+        border-radius: 25px !important;
+        border: 2px solid #e2e8f0 !important;
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+        transition: all 0.3s ease !important;
+        background: white !important;
+        color: #1f2937 !important; /* Dark text color for visibility */
     }
     
-    /* Quick questions floating */
-    .floating-questions {
-        position: fixed;
-        bottom: 80px;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid #e2e8f0;
-        padding: 0.5rem 1rem;
-        z-index: 999;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    .stTextInput > div > div > input:focus {
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        color: #1f2937 !important; /* Ensure text stays dark when focused */
     }
     
-    /* Input styling */
-    .stTextInput input {
-        border-radius: 25px;
-        border: 2px solid #e2e8f0;
-        padding: 12px 20px;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        background: white;
-    }
-    
-    .stTextInput input:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    .stTextInput > div > div > input::placeholder {
+        color: #9ca3af !important; /* Light gray placeholder */
+        opacity: 1 !important;
     }
     
     /* Send button styling */
     .stButton > button {
-        border-radius: 25px;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        border: none;
-        color: white;
-        font-weight: 600;
-        padding: 12px 24px;
-        transition: all 0.3s ease;
-        min-height: 48px;
+        border-radius: 25px !important;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 12px 24px !important;
+        transition: all 0.3s ease !important;
+        min-height: 48px !important;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-    }
-    
-    /* Quick question buttons */
-    .quick-btn {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 20px;
-        padding: 8px 16px;
-        margin: 0 5px;
-        font-size: 13px;
-        color: #374151;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-    
-    .quick-btn:hover {
-        background: #f8fafc;
-        border-color: #4f46e5;
-        color: #4f46e5;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4) !important;
     }
     
     /* Remove unwanted margins from containers */
@@ -166,11 +126,16 @@ st.markdown("""
         justify-content: center;
     }
     
-    /* Chat container */
-    .chat-container {
-        min-height: 60vh;
-        padding-bottom: 140px; /* Extra space for floating input */
+    /* Quick questions styling */
+    .quick-questions-text {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+        text-align: center;
     }
+            
+    
 </style>
 """, unsafe_allow_html=True)
 
@@ -183,8 +148,8 @@ def export_conversation_text() -> str:
     if not st.session_state.messages:
         return "No conversation to export."
     
-    # Get document info
-    doc_info = st.session_state.get('doc_info', {})
+    # Get document info safely
+    doc_info = st.session_state.get('doc_info', {}) or {}
     doc_name = doc_info.get('filename', 'Unknown Document')
     
     # Create header
@@ -220,7 +185,7 @@ def export_conversation_json() -> str:
     if not st.session_state.messages:
         return "{}"
     
-    doc_info = st.session_state.get('doc_info', {})
+    doc_info = st.session_state.get('doc_info', {}) or {}
     
     export_data = {
         "export_info": {
@@ -242,7 +207,7 @@ def export_conversation_markdown() -> str:
     if not st.session_state.messages:
         return "# No conversation to export"
     
-    doc_info = st.session_state.get('doc_info', {})
+    doc_info = st.session_state.get('doc_info', {}) or {}
     doc_name = doc_info.get('filename', 'Unknown Document')
     
     markdown_text = f"""# PDF Chatbot Conversation
@@ -280,8 +245,8 @@ def save_conversation_sidebar():
             help="Choose format for saving conversation"
         )
         
-        # Generate filename
-        doc_info = st.session_state.get('doc_info', {})
+        # Generate filename safely
+        doc_info = st.session_state.get('doc_info', {}) or {}
         doc_name = doc_info.get('filename', 'conversation')
         # Clean filename
         clean_doc_name = "".join(c for c in doc_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
@@ -384,6 +349,9 @@ def initialize_session():
         st.session_state.llm = LLMHandler()
     if 'pdf_proc' not in st.session_state:
         st.session_state.pdf_proc = PDFProcessor()
+    # Add counter to force input refresh
+    if 'input_counter' not in st.session_state:
+        st.session_state.input_counter = 0
 
 def sidebar():
     """Enhanced sidebar with save/load functionality"""
@@ -396,6 +364,11 @@ def sidebar():
         if st.session_state.doc_info:
             st.sidebar.info(f"📄 {st.session_state.doc_info['filename']}")
             st.sidebar.info(f"📝 {st.session_state.doc_info['word_count']:,} words")
+            
+            # Memory status
+            if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'conversation_memory') and st.session_state.llm.conversation_memory:
+                memory_count = len(st.session_state.llm.conversation_memory)
+                st.sidebar.info(f"🧠 Context: {memory_count} exchanges")
     else:
         st.sidebar.info("📤 Upload a PDF to start")
     
@@ -409,13 +382,19 @@ def sidebar():
     
     # Controls
     st.sidebar.subheader("🛠️ Controls")
-    if st.sidebar.button("🗑️ Clear Chat"):
-        st.session_state.messages = []
-        st.rerun()
     
-    if st.sidebar.button("🔄 New Document"):
-        reset_session()
-        st.rerun()
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        if st.button("🗑️ Clear Chat", use_container_width=True):
+            st.session_state.messages = []
+            if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'clear_memory'):
+                st.session_state.llm.clear_memory()
+            st.rerun()
+    
+    with col2:
+        if st.button("🔄 New Document", use_container_width=True):
+            reset_session()
+            st.rerun()
     
     # Save/Load functionality
     save_conversation_sidebar()
@@ -457,6 +436,8 @@ def reset_session():
     st.session_state.document_ready = False
     st.session_state.doc_info = None
     st.session_state.embeddings = None
+    if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'clear_memory'):
+        st.session_state.llm.clear_memory()
 
 def show_chat():
     """Display chat messages"""
@@ -471,51 +452,82 @@ def show_chat():
         return
     
     # Show messages
-    for msg in st.session_state.messages:
+    for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "user":
+            # Check for follow-up context
+            context_indicator = ""
+            if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'detect_follow_up_question') and i > 0:
+                try:
+                    is_follow_up = st.session_state.llm.detect_follow_up_question(msg["content"])
+                    context_indicator = " ↳" if is_follow_up else ""
+                except:
+                    context_indicator = ""
+            
             st.markdown(f"""
             <div class="chat-message user-message">
-                <strong>You:</strong><br>{msg["content"]}
+                <strong>You{context_indicator}:</strong><br>{msg["content"]}
             </div>
             """, unsafe_allow_html=True)
         else:
+            # Show context info
+            context_info = ""
+            if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'conversation_memory') and st.session_state.llm.conversation_memory:
+                context_count = len(st.session_state.llm.conversation_memory)
+                context_info = f" <small style='opacity: 0.7;'>(Context: {context_count} exchanges)</small>"
+            
+            # FIXED: Include the message content inside the div
             st.markdown(f"""
             <div class="chat-message ai-message">
-                <strong>🤖 Assistant:</strong><br>
+                <strong>🤖 Assistant{context_info}:</strong><br>
+                {msg["content"]}
             </div>
             """, unsafe_allow_html=True)
-            st.markdown(msg["content"])
-
-def quick_questions():
-    """Show quick question buttons"""
-    if not st.session_state.document_ready:
-        questions = ["How does this work?", "What can you analyze?", "Upload a document"]
-    else:
-        # Dynamic based on document
-        doc = st.session_state.doc_info
-        if doc and 'annual' in doc['filename'].lower():
-            questions = ["What are the key metrics?", "Financial highlights?", "Business strategy?"]
-        elif doc and 'research' in doc['filename'].lower():
-            questions = ["What's the objective?", "Show methodology", "Key findings?"]
-        else:
-            questions = ["Summarize document", "Main topics?", "Key insights?"]
-    
-    st.markdown("**💡 Quick questions:**")
-    cols = st.columns(len(questions))
-    
-    for i, q in enumerate(questions):
-        with cols[i]:
-            if st.button(q, key=f"quick_{i}"):
-                return q
-    return None
 
 def handle_question(question):
-    """Process user question"""
-    # Add user message
-    st.session_state.messages.append({"role": "user", "content": question})
+    """Process user question with enhanced memory support"""
+    # Add user message with timestamp
+    current_time = datetime.now().strftime('%H:%M:%S')
+    
+    st.session_state.messages.append({
+        "role": "user", 
+        "content": question,
+        "timestamp": current_time
+    })
     
     if not st.session_state.document_ready:
-        response = """I need you to upload a PDF document first! 
+        # FIXED: Provide helpful responses for common questions even without a document
+        if question.lower() in ["how does this work?", "what can you analyze?", "upload a document"]:
+            if "how does this work" in question.lower():
+                response = """Here's how the PDF Chatbot works:
+
+1. **Upload a PDF**: Use the sidebar to upload any PDF document
+2. **Processing**: I'll analyze and index the content using advanced AI
+3. **Ask Questions**: Type any question about the document
+4. **Get Answers**: I'll provide detailed answers based on the document content
+
+I use embeddings and language models to understand context and provide accurate responses!"""
+            elif "what can you analyze" in question.lower():
+                response = """I can analyze various types of PDF documents:
+
+📊 **Business Documents**: Annual reports, financial statements, business plans
+📚 **Academic Papers**: Research papers, theses, journal articles
+📋 **Technical Docs**: Manuals, specifications, documentation
+⚖️ **Legal Documents**: Contracts, agreements, policies
+📖 **Books & Reports**: E-books, whitepapers, case studies
+
+I can extract key information, summarize content, answer specific questions, and help you understand complex topics!"""
+            else:  # "upload a document"
+                response = """To upload a document:
+
+1. Look at the **sidebar** on the left
+2. Find the **"📁 Upload"** section
+3. Click **"Browse files"** or drag & drop your PDF
+4. Wait for processing (usually takes a few seconds)
+5. Start asking questions!
+
+Supported format: PDF files only (for now)"""
+        else:
+            response = """I need you to upload a PDF document first! 
 
 Use the sidebar to upload any PDF file, and I'll analyze it for you. I can help with:
 • Research papers
@@ -528,84 +540,47 @@ Use the sidebar to upload any PDF file, and I'll analyze it for you. I can help 
             # Get context
             context = st.session_state.embeddings.get_context_for_query(question, max_chunks=3)
             
-            # Generate response
-            response = st.session_state.llm.generate_response(
-                query=question,
-                context=context,
-                prompt_type="default"
-            )
+            # Check if this might be a follow-up question
+            is_follow_up = False
+            if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'detect_follow_up_question'):
+                try:
+                    is_follow_up = st.session_state.llm.detect_follow_up_question(question)
+                except:
+                    is_follow_up = False
+            
+            # Show follow-up indicator to user
+            if is_follow_up and hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'conversation_memory') and st.session_state.llm.conversation_memory:
+                with st.spinner("🧠 Analyzing with conversation context..."):
+                    response = st.session_state.llm.generate_response(
+                        query=question,
+                        context=context,
+                        prompt_type="default"
+                    )
+            else:
+                with st.spinner("Analyzing document..."):
+                    response = st.session_state.llm.generate_response(
+                        query=question,
+                        context=context,
+                        prompt_type="default"
+                    )
             
             if not response:
                 response = "I couldn't generate a response. Please try rephrasing your question."
+                
         except Exception as e:
             response = f"Error: {e}. Please try again."
     
-    # Add AI response
-    st.session_state.messages.append({"role": "assistant", "content": response})
-
-def show_conversation_controls():
-    """Show conversation controls in main area"""
-    if st.session_state.messages:
-        st.markdown("---")
-        st.markdown("### 💾 Conversation Controls")
-        
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
-            # Quick save button
-            doc_info = st.session_state.get('doc_info', {})
-            doc_name = doc_info.get('filename', 'conversation')
-            clean_name = "".join(c for c in doc_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            
-            st.download_button(
-                "📥 Quick Save (TXT)",
-                data=export_conversation_text(),
-                file_name=f"chat_{clean_name}_{timestamp}.txt",
-                mime="text/plain",
-                help="Download conversation as text file",
-                use_container_width=True
-            )
-        
-        with col2:
-            st.download_button(
-                "📋 Save as Markdown",
-                data=export_conversation_markdown(),
-                file_name=f"chat_{clean_name}_{timestamp}.md",
-                mime="text/markdown",
-                help="Download conversation as Markdown",
-                use_container_width=True
-            )
-        
-        with col3:
-            st.download_button(
-                "📊 Save as JSON",
-                data=export_conversation_json(),
-                file_name=f"chat_{clean_name}_{timestamp}.json",
-                mime="application/json", 
-                help="Download conversation with metadata",
-                use_container_width=True
-            )
-        
-        with col4:
-            # Show stats
-            total_messages = len(st.session_state.messages)
-            st.metric("Messages", total_messages)
+    # Add AI response with timestamp
+    st.session_state.messages.append({
+        "role": "assistant", 
+        "content": response,
+        "timestamp": current_time
+    })
 
 def main():
-    """Main app with fixed floating input"""
+    """Main app with clean layout"""
     initialize_session()
     sidebar()
-    
-    # Compact header (no extra space)
-    st.markdown("""
-    <div style='text-align: center; margin-bottom: 1rem; padding-top: 0;'>
-        <h1 style='background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-size: 2.5rem;'>
-            🤖 Smart PDF Chatbot
-        </h1>
-        <p style='color: #64748b; margin: 0.2rem 0; font-size: 1rem;'>Have intelligent conversations with your documents</p>
-    </div>
-    """, unsafe_allow_html=True)
     
     # Document status (compact)
     if st.session_state.document_ready and st.session_state.doc_info:
@@ -616,76 +591,66 @@ def main():
         </div>
         """, unsafe_allow_html=True)
     
-    # Chat area (with proper container)
-    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+    # Chat area
     show_chat()
-    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Conversation controls (above floating input)
-    show_conversation_controls()
-    
-    # FLOATING QUICK QUESTIONS
-    st.markdown('<div class="floating-questions">', unsafe_allow_html=True)
-    floating_quick_questions()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # FLOATING INPUT AREA
-    st.markdown('<div class="floating-input">', unsafe_allow_html=True)
-    floating_input_area()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def floating_quick_questions():
-    """Floating quick questions bar"""
+    # Quick questions (regular, not floating)
     if not st.session_state.document_ready:
         questions = ["How does this work?", "What can you analyze?", "Upload a document"]
     else:
-        doc = st.session_state.doc_info
-        if doc and 'annual' in doc['filename'].lower():
-            questions = ["Key metrics?", "Financial highlights?", "Business strategy?"]
-        elif doc and 'research' in doc['filename'].lower():
-            questions = ["Research objective?", "Methodology?", "Key findings?"]
+        # Context-aware suggestions
+        if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'conversation_memory') and st.session_state.llm.conversation_memory:
+            try:
+                last_memory = st.session_state.llm.conversation_memory[-1]
+                last_topic = last_memory['user'].lower()
+                
+                if 'revenue' in last_topic or 'financial' in last_topic:
+                    questions = ["Tell me more", "What about expenses?", "Compare periods"]
+                elif 'strategy' in last_topic or 'business' in last_topic:
+                    questions = ["Elaborate", "What are risks?", "Implementation?"]
+                else:
+                    questions = ["More details", "Related topics?", "Summary?"]
+            except:
+                questions = ["Summarize document", "Main topics?", "Key insights?"]
         else:
-            questions = ["Summarize document", "Main topics?", "Key insights?"]
+            doc = st.session_state.doc_info
+            if doc and 'annual' in doc['filename'].lower():
+                questions = ["Key metrics?", "Financial highlights?", "Business strategy?"]
+            elif doc and 'research' in doc['filename'].lower():
+                questions = ["Research objective?", "Methodology?", "Key findings?"]
+            else:
+                questions = ["Summarize document", "Main topics?", "Key insights?"]
     
     st.markdown("**💡 Quick questions:**")
     cols = st.columns(len(questions))
     
     for i, q in enumerate(questions):
         with cols[i]:
-            if st.button(q, key=f"floating_quick_{i}", use_container_width=True):
-                # Store the question and trigger processing
-                st.session_state.pending_question = q
+            if st.button(q, key=f"quick_{i}", use_container_width=True):
+                handle_question(q)
                 st.rerun()
-
-def floating_input_area():
-    """Fixed floating input area"""
-    # Check for pending question from quick buttons
-    pending_q = st.session_state.get('pending_question', '')
-    if pending_q:
-        # Clear the pending question
-        del st.session_state.pending_question
-        # Process it
-        handle_question(pending_q)
-        st.rerun()
     
-    # Input row
+    # Input area (regular, not floating)
+    st.markdown("### 💬 Ask a Question")
     col1, col2 = st.columns([5, 1])
     
     with col1:
+        # FIXED: Use a unique key that changes after each submission
         user_input = st.text_input(
             "Message",
             placeholder="Ask anything about your document...",
-            key="floating_input",
+            key=f"main_input_{st.session_state.input_counter}",
             label_visibility="collapsed"
         )
     
     with col2:
-        send = st.button("Send", use_container_width=True, key="floating_send")
+        send = st.button("Send", use_container_width=True, key="main_send")
     
     # Handle input
     if send and user_input:
         handle_question(user_input)
-        # Clear the input by rerunning
+        # Increment counter to force new input field
+        st.session_state.input_counter += 1
         st.rerun()
 
 if __name__ == "__main__":
