@@ -234,10 +234,6 @@ For issues, questions, or contributions:
 
 ---
 
-Got it. Here's an **isolated Docker section** for your `README.md` that you can copy-paste **at the bottom** — without changing anything else in your file.
-
----
-
 ## Docker Support
 
 This project supports containerized deployment using Docker for simplified setup and consistent environments.
