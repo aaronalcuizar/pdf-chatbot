@@ -231,3 +231,49 @@ For issues, questions, or contributions:
 ---
 
 **Built with ❤️ using Python, Streamlit, and OpenAI**
+
+---
+
+Got it. Here's an **isolated Docker section** for your `README.md` that you can copy-paste **at the bottom** — without changing anything else in your file.
+
+---
+
+## Docker Support
+
+This project supports containerized deployment using Docker for simplified setup and consistent environments.
+
+### Build the Docker Image
+
+```bash
+docker build -t pdf-chatbot .
+```
+
+### Run the Application
+
+```bash
+docker run -p 8501:8501 --env-file .env pdf-chatbot
+```
+
+> Make sure to create a `.env` file in the root directory with your OpenAI API key:
+
+```env
+OPENAI_API_KEY=your-openai-api-key-here
+```
+
+### Optional: Bind Mount for Local PDFs
+
+If you want to persist files or access local PDFs:
+
+```bash
+docker run -p 8501:8501 --env-file .env -v $(pwd)/data:/app/data pdf-chatbot
+```
+
+### Clean Up
+
+To stop and remove the container:
+
+```bash
+docker ps
+docker stop <container_id>
+docker rm <container_id>
+```
