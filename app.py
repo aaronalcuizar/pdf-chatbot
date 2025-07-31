@@ -19,8 +19,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Updated CSS - FIXED: Reduced top and bottom margins to 24px
+# Updated CSS with Font Awesome icons
 st.markdown("""
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     /* Remove default padding and margins - UPDATED: Reduced to 24px */
     .main .block-container {
@@ -134,8 +135,12 @@ st.markdown("""
         font-weight: 500;
         text-align: center;
     }
-            
     
+    /* Icon styling */
+    .icon {
+        margin-right: 8px;
+    }
+            
 </style>
 """, unsafe_allow_html=True)
 
@@ -236,7 +241,7 @@ def save_conversation_sidebar():
     """Add save conversation options to sidebar"""
     if st.session_state.messages:
         st.sidebar.markdown("---")
-        st.sidebar.subheader("Save Conversation")
+        st.sidebar.markdown("### <i class='fas fa-save'></i> Save Conversation")
         
         # Save format selection
         save_format = st.sidebar.selectbox(
@@ -276,7 +281,7 @@ def save_conversation_sidebar():
         )
         
         # Conversation stats
-        if st.sidebar.button("Show Stats", use_container_width=True):
+        if st.sidebar.button("📊 Show Stats", use_container_width=True):
             total_messages = len(st.session_state.messages)
             user_messages = len([m for m in st.session_state.messages if m["role"] == "user"])
             ai_messages = len([m for m in st.session_state.messages if m["role"] == "assistant"])
@@ -291,7 +296,7 @@ def save_conversation_sidebar():
 
 def load_conversation_sidebar():
     """Add load conversation option to sidebar"""
-    st.sidebar.subheader("Load Conversation")
+    st.sidebar.markdown("### <i class='fas fa-folder-open'></i> Load Conversation")
     
     uploaded_chat = st.sidebar.file_uploader(
         "Upload Previous Chat",
@@ -316,11 +321,11 @@ def load_conversation_sidebar():
                         st.sidebar.info(f"Document: {info.get('document_name', 'Unknown')}")
                         st.sidebar.info(f"Date: {info.get('timestamp', 'Unknown')}")
                     
-                    # Load button
-                    if st.sidebar.button("Load This Conversation"):
-                        st.session_state.messages = chat_data['conversation']
-                        st.sidebar.success("Conversation loaded!")
-                        st.rerun()
+                                    # Load button
+                if st.sidebar.button("🔄 Load This Conversation"):
+                    st.session_state.messages = chat_data['conversation']
+                    st.sidebar.success("✅ Conversation loaded!")
+                    st.rerun()
                 else:
                     st.sidebar.error("Invalid conversation format")
             else:
@@ -355,25 +360,25 @@ def initialize_session():
 
 def sidebar():
     """Enhanced sidebar with save/load functionality"""
-    st.sidebar.title("PDF Chatbot")
+    st.sidebar.markdown("## <i class='fas fa-robot'></i> PDF Chatbot")
     
     # Status
-    st.sidebar.subheader("Status")
+    st.sidebar.markdown("### <i class='fas fa-chart-bar'></i> Status")
     if st.session_state.document_ready:
-        st.sidebar.success("Document Ready")
+        st.sidebar.success("✅ Document Ready")
         if st.session_state.doc_info:
-            st.sidebar.info(f"{st.session_state.doc_info['filename']}")
-            st.sidebar.info(f"{st.session_state.doc_info['word_count']:,} words")
+            st.sidebar.info(f"📄 {st.session_state.doc_info['filename']}")
+            st.sidebar.info(f"📝 {st.session_state.doc_info['word_count']:,} words")
             
             # Memory status
             if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'conversation_memory') and st.session_state.llm.conversation_memory:
                 memory_count = len(st.session_state.llm.conversation_memory)
-                st.sidebar.info(f"Context: {memory_count} exchanges")
+                st.sidebar.info(f"🧠 Context: {memory_count} exchanges")
     else:
-        st.sidebar.info("Upload a PDF to start")
+        st.sidebar.info("📤 Upload a PDF to start")
     
     # Upload
-    st.sidebar.subheader("Upload")
+    st.sidebar.markdown("### <i class='fas fa-upload'></i> Upload")
     uploaded_file = st.sidebar.file_uploader("Choose PDF", type=['pdf'])
     
     if uploaded_file and not st.session_state.document_ready:
@@ -381,18 +386,18 @@ def sidebar():
             st.rerun()
     
     # Controls
-    st.sidebar.subheader("Controls")
+    st.sidebar.markdown("### <i class='fas fa-tools'></i> Controls")
     
     col1, col2 = st.sidebar.columns(2)
     with col1:
-        if st.button("Clear Chat", use_container_width=True):
+        if st.button("🗑️ Clear Chat", use_container_width=True):
             st.session_state.messages = []
             if hasattr(st.session_state, 'llm') and hasattr(st.session_state.llm, 'clear_memory'):
                 st.session_state.llm.clear_memory()
             st.rerun()
     
     with col2:
-        if st.button("New Document", use_container_width=True):
+        if st.button("🔄 New Document", use_container_width=True):
             reset_session()
             st.rerun()
     
@@ -444,7 +449,7 @@ def show_chat():
     if not st.session_state.messages:
         st.markdown("""
         <div style='text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 15px; margin: 2rem 0;'>
-            <div style='font-size: 4rem; margin-bottom: 1rem;'>📄</div>
+            <div style='font-size: 4rem; margin-bottom: 1rem;'><i class='fas fa-file-pdf'></i></div>
             <h2 style='color: #1e293b; margin-bottom: 1rem;'>Welcome to PDF Chatbot!</h2>
             <p style='color: #64748b; font-size: 1.1rem;'>Upload a PDF document to start an intelligent conversation about its content.</p>
         </div>
@@ -465,7 +470,7 @@ def show_chat():
             
             st.markdown(f"""
             <div class="chat-message user-message">
-                <strong>You{context_indicator}:</strong><br>{msg["content"]}
+                <strong><i class='fas fa-user'></i> You{context_indicator}:</strong><br>{msg["content"]}
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -478,7 +483,7 @@ def show_chat():
             # FIXED: Include the message content inside the div
             st.markdown(f"""
             <div class="chat-message ai-message">
-                <strong>Assistant{context_info}:</strong><br>
+                <strong><i class='fas fa-robot'></i> Assistant{context_info}:</strong><br>
                 {msg["content"]}
             </div>
             """, unsafe_allow_html=True)
@@ -587,7 +592,7 @@ def main():
         doc = st.session_state.doc_info
         st.markdown(f"""
         <div class="doc-status" style="margin-bottom: 1rem; padding: 0.8rem;">
-            <strong>{doc['filename']}</strong> Ready! • {doc['word_count']:,} words • {doc['chunk_count']} chunks
+            <i class='fas fa-file-pdf'></i> <strong>{doc['filename']}</strong> Ready! • <i class='fas fa-chart-bar'></i> {doc['word_count']:,} words • <i class='fas fa-cubes'></i> {doc['chunk_count']} chunks
         </div>
         """, unsafe_allow_html=True)
     
@@ -621,7 +626,7 @@ def main():
             else:
                 questions = ["Summarize document", "Main topics?", "Key insights?"]
     
-    st.markdown("**Quick questions:**")
+    st.markdown("**<i class='fas fa-lightbulb'></i> Quick questions:**")
     cols = st.columns(len(questions))
     
     for i, q in enumerate(questions):
@@ -631,7 +636,7 @@ def main():
                 st.rerun()
     
     # Input area (regular, not floating)
-    st.markdown("### Ask a Question")
+    st.markdown("### <i class='fas fa-comment'></i> Ask a Question")
     col1, col2 = st.columns([5, 1])
     
     with col1:
