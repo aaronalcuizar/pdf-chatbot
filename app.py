@@ -19,9 +19,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Updated CSS with Font Awesome icons
+# Updated CSS with proper icon implementation
 st.markdown("""
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     /* Remove default padding and margins - UPDATED: Reduced to 24px */
     .main .block-container {
@@ -140,6 +139,22 @@ st.markdown("""
     .icon {
         margin-right: 8px;
     }
+    
+    /* Custom icon classes for better visibility */
+    .icon-robot { font-size: 1.2em; margin-right: 8px; }
+    .icon-chart { font-size: 1.2em; margin-right: 8px; }
+    .icon-upload { font-size: 1.2em; margin-right: 8px; }
+    .icon-tools { font-size: 1.2em; margin-right: 8px; }
+    .icon-save { font-size: 1.2em; margin-right: 8px; }
+    .icon-folder { font-size: 1.2em; margin-right: 8px; }
+    .icon-lightbulb { font-size: 1.2em; margin-right: 8px; }
+    .icon-comment { font-size: 1.2em; margin-right: 8px; }
+    .icon-file { font-size: 1.2em; margin-right: 8px; }
+    .icon-cubes { font-size: 1.2em; margin-right: 8px; }
+    .icon-user { font-size: 1.2em; margin-right: 8px; }
+    .icon-ai { font-size: 1.2em; margin-right: 8px; }
+    
+
             
 </style>
 """, unsafe_allow_html=True)
@@ -241,7 +256,7 @@ def save_conversation_sidebar():
     """Add save conversation options to sidebar"""
     if st.session_state.messages:
         st.sidebar.markdown("---")
-        st.sidebar.markdown("### <i class='fas fa-save'></i> Save Conversation")
+        st.sidebar.markdown("### 💾 Save Conversation")
         
         # Save format selection
         save_format = st.sidebar.selectbox(
@@ -281,7 +296,7 @@ def save_conversation_sidebar():
         )
         
         # Conversation stats
-        if st.sidebar.button("📊 Show Stats", use_container_width=True):
+        if st.sidebar.button("📈 Show Stats", use_container_width=True):
             total_messages = len(st.session_state.messages)
             user_messages = len([m for m in st.session_state.messages if m["role"] == "user"])
             ai_messages = len([m for m in st.session_state.messages if m["role"] == "assistant"])
@@ -296,7 +311,7 @@ def save_conversation_sidebar():
 
 def load_conversation_sidebar():
     """Add load conversation option to sidebar"""
-    st.sidebar.markdown("### <i class='fas fa-folder-open'></i> Load Conversation")
+    st.sidebar.markdown("### 📁 Load Conversation")
     
     uploaded_chat = st.sidebar.file_uploader(
         "Upload Previous Chat",
@@ -322,7 +337,7 @@ def load_conversation_sidebar():
                         st.sidebar.info(f"Date: {info.get('timestamp', 'Unknown')}")
                     
                                     # Load button
-                if st.sidebar.button("🔄 Load This Conversation"):
+                if st.sidebar.button("📥 Load This Conversation"):
                     st.session_state.messages = chat_data['conversation']
                     st.sidebar.success("✅ Conversation loaded!")
                     st.rerun()
@@ -360,10 +375,10 @@ def initialize_session():
 
 def sidebar():
     """Enhanced sidebar with save/load functionality"""
-    st.sidebar.markdown("## <i class='fas fa-robot'></i> PDF Chatbot")
+    st.sidebar.markdown("## 🤖 PDF Chatbot")
     
     # Status
-    st.sidebar.markdown("### <i class='fas fa-chart-bar'></i> Status")
+    st.sidebar.markdown("### 📊 Status")
     if st.session_state.document_ready:
         st.sidebar.success("✅ Document Ready")
         if st.session_state.doc_info:
@@ -378,7 +393,7 @@ def sidebar():
         st.sidebar.info("📤 Upload a PDF to start")
     
     # Upload
-    st.sidebar.markdown("### <i class='fas fa-upload'></i> Upload")
+    st.sidebar.markdown("### 📤 Upload")
     uploaded_file = st.sidebar.file_uploader("Choose PDF", type=['pdf'])
     
     if uploaded_file and not st.session_state.document_ready:
@@ -386,7 +401,7 @@ def sidebar():
             st.rerun()
     
     # Controls
-    st.sidebar.markdown("### <i class='fas fa-tools'></i> Controls")
+    st.sidebar.markdown("### 🔧 Controls")
     
     col1, col2 = st.sidebar.columns(2)
     with col1:
@@ -397,7 +412,7 @@ def sidebar():
             st.rerun()
     
     with col2:
-        if st.button("🔄 New Document", use_container_width=True):
+        if st.button("📄 New Document", use_container_width=True):
             reset_session()
             st.rerun()
     
@@ -449,7 +464,7 @@ def show_chat():
     if not st.session_state.messages:
         st.markdown("""
         <div style='text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 15px; margin: 2rem 0;'>
-            <div style='font-size: 4rem; margin-bottom: 1rem;'><i class='fas fa-file-pdf'></i></div>
+            <div style='font-size: 4rem; margin-bottom: 1rem;'>📄</div>
             <h2 style='color: #1e293b; margin-bottom: 1rem;'>Welcome to PDF Chatbot!</h2>
             <p style='color: #64748b; font-size: 1.1rem;'>Upload a PDF document to start an intelligent conversation about its content.</p>
         </div>
@@ -470,7 +485,7 @@ def show_chat():
             
             st.markdown(f"""
             <div class="chat-message user-message">
-                <strong><i class='fas fa-user'></i> You{context_indicator}:</strong><br>{msg["content"]}
+                <strong>👤 You{context_indicator}:</strong><br>{msg["content"]}
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -483,7 +498,7 @@ def show_chat():
             # FIXED: Include the message content inside the div
             st.markdown(f"""
             <div class="chat-message ai-message">
-                <strong><i class='fas fa-robot'></i> Assistant{context_info}:</strong><br>
+                <strong>🤖 Assistant{context_info}:</strong><br>
                 {msg["content"]}
             </div>
             """, unsafe_allow_html=True)
@@ -525,7 +540,7 @@ I can extract key information, summarize content, answer specific questions, and
                 response = """To upload a document:
 
 1. Look at the **sidebar** on the left
-2. Find the **"📁 Upload"** section
+2. Find the **"📤 Upload"** section
 3. Click **"Browse files"** or drag & drop your PDF
 4. Wait for processing (usually takes a few seconds)
 5. Start asking questions!
@@ -592,7 +607,7 @@ def main():
         doc = st.session_state.doc_info
         st.markdown(f"""
         <div class="doc-status" style="margin-bottom: 1rem; padding: 0.8rem;">
-            <i class='fas fa-file-pdf'></i> <strong>{doc['filename']}</strong> Ready! • <i class='fas fa-chart-bar'></i> {doc['word_count']:,} words • <i class='fas fa-cubes'></i> {doc['chunk_count']} chunks
+            📄 <strong>{doc['filename']}</strong> Ready! • 📊 {doc['word_count']:,} words • 🧩 {doc['chunk_count']} chunks
         </div>
         """, unsafe_allow_html=True)
     
@@ -626,7 +641,7 @@ def main():
             else:
                 questions = ["Summarize document", "Main topics?", "Key insights?"]
     
-    st.markdown("**<i class='fas fa-lightbulb'></i> Quick questions:**")
+    st.markdown("**💡 Quick questions:**")
     cols = st.columns(len(questions))
     
     for i, q in enumerate(questions):
@@ -636,7 +651,7 @@ def main():
                 st.rerun()
     
     # Input area (regular, not floating)
-    st.markdown("### <i class='fas fa-comment'></i> Ask a Question")
+    st.markdown("### 💬 Ask a Question")
     col1, col2 = st.columns([5, 1])
     
     with col1:
